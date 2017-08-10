@@ -3,7 +3,7 @@
 from sys import argv
 from os import system
 from os.path import splitext, exists
-from multiprocessing import Process
+from multiprocessing import Pool
 
 def split_list (l, njobs):
 	length = len(l)
@@ -30,14 +30,14 @@ if __name__ == "__main__" :
 	aicflist = agrv[1]
 
 	with open(aicflist, "r") as f :
-		aicf = f.read().split("\n")
+		aicf = f.read().strip()split("\n")
 
-	aicf = split_list(aicf, njobs)
 	#print(aicf)
 
-	jobs = []
-	for i in range(njobs) :
-		p = Process(target=run, args=(aicf[i], ))
-		jobs.append(p)
-		p.start()
+	p = Pool(njobs)
+	p.map(run, aicf)
+
+	exit("done")
+
+	
 
