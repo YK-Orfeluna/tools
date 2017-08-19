@@ -7,7 +7,7 @@ if version_info[0] == 2 :
 elif version_info[0] == 3 :
 	from subprocess import getoutput
 else :
-	exit("Error: this script operate only Python2.x or 3.x\nyour Python is not 2.x or 3.x")
+	exit("Error: this script operate only Python2.x or 3.x\nYour Python is not 2.x or 3.x")
 
 print("Process: 'brew update'")
 print(getoutput("brew update"))
