@@ -1,41 +1,38 @@
 # coding: utf-8
 
-from sys import argv
-from os import system
-from os.path import splitext, exists
-from multiprocessing import Pool
-
-def split_list (l, njobs):
-	length = len(l)
-	n = int(round(len(l) / njobs, 0))
-	out = []
-	for i in range(njobs) :
-		if i != njobs-1 :
-			out.append(l[n*i: (n*(i+1))])
-		else :
-			out.append(l[n*i: ])
-	return out
+from subprocess import getoutput
+from os.path import splitext, exists, basename
+from time import ctime
 
 def run(aicf) :
-	for i in aicf :
-		outname = "./convert" + splitext(i)[0] + ".wav"
-		system("afconvert -f WAVE -d LEI16 %s %s" %(i, outname))
+	outname = outdir + "/" + basename(splitext(aicf)[0]) + ".wav"
+
+	getoutput("afconvert -f WAVE -d LEI16 %s %s" %(aicf, outname))
+
+	print("[%s]\ndone: convert to wav-file: %s" %(ctime, aicf))
 
 if __name__ == "__main__" :
+	from sys import argv
+	from multiprocessing import Pool, cpu_count
 
-	if not exists("./convert") :
-		system("mkdir ./convert")
+	target_dir = agrv[1]
 
-	njobs = argv[0]
-	aicflist = agrv[1]
+	if target_dir[-1] == "/" :
+		target_dir = target_dir[: -1]
 
-	with open(aicflist, "r") as f :
-		aicf = f.read().strip()split("\n")
+	aicflist = getoutput("find %s -maxdepth 1 -mindepth 1 -type f -name '*.aicf'" \
+		%target_dir).split("\n")
+	aicflist.sort()
 
-	#print(aicf)
+	outdir = "%s/convert" %target_dir
+	if not exists(outdir) :
+		getoutput("mkdir %s" %outdir)
 
+	print("[%s]\ndone: read aicf-files" %ctime())
+
+	njobs = cpu_count()
 	p = Pool(njobs)
-	p.map(run, aicf)
+	p.map(run, aicflist)
 
 	exit("done")
 
