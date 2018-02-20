@@ -30,8 +30,8 @@ txtファイル以外でも開けると思うが，それはPythonが自力でop
 
 ## hof
 
-## LIS3DH_I2C
-I2C通信を使った，3軸加速度センサ[LIS3DH](http://akizukidenshi.com/catalog/g/gK-06791/)を実行するArudinoのスケッチと，[回線図](./LIS3DH_I2C/wiring.jpg)．
+## LIS3DH
+I2C通信を使った，3軸加速度センサ[LIS3DH](http://akizukidenshi.com/catalog/g/gK-06791/)を実行するArudinoのスケッチと，[回線図](./LIS3DH/wiring.jpg)．
 
 ArudinoでLIS3DHを使うためには電圧の変換が必要なので，回路図では[PCA306](http://akizukidenshi.com/catalog/g/gM-05452/)を使用．
 
