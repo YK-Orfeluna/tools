@@ -1,0 +1,6 @@
+We propose an acoustic AR type virtual TA agent which is expressed by only moving sound field of footsteps corresponding to audience members participating attitudes toward the lecture.
+In one-to-many communication such as a lecture includes multiple audiences, there are the audiences who not only participate toward the lecture initiatively, but also pay attention to except for the lecture.
+In such case, it is desirable the lecturer corresponds the audiences will pay attention toward the lecture. 
+However, it is unrealistic from the problems such as the flow of lecture is stopped by the lecturer’s corresponding.
+The agent prompts the audiences pay attention toward the lecture by walking toward the audiences who have potential risks such as they pay attention to except for the lecture. 
+As the result of experiment, the participants feel that someone exists and walks around there by perceiving the move of the sound field, and the subject of footsteps is lecturer and TA.
