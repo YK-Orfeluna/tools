@@ -1,6 +1,12 @@
-We propose an acoustic AR type virtual TA agent which is expressed by only moving sound field of footsteps corresponding to audience members participating attitudes toward the lecture.
-In one-to-many communication such as a lecture includes multiple audiences, there are the audiences who not only participate toward the lecture initiatively, but also pay attention to except for the lecture.
-In such case, it is desirable the lecturer corresponds the audiences will pay attention toward the lecture. 
-However, it is unrealistic from the problems such as the flow of lecture is stopped by the lecturer’s corresponding.
-The agent prompts the audiences pay attention toward the lecture by walking toward the audiences who have potential risks such as they pay attention to except for the lecture. 
-As the result of experiment, the participants feel that someone exists and walks around there by perceiving the move of the sound field, and the subject of footsteps is lecturer and TA.
+We propose an acoustic AR type virtual TA agent (AVTA) corresponding to participating attitudes of audiences in a lecture.
+
+In one-to-many communications such as lectures with over 100 audiences, there are some audiences who do not concentrate on the lecture.
+In such case, it is difficult to make such audiences to pay attention toward the lecture
+during ongoing lecture at the same time.
+
+To improve the attitude of the audience who does not concentrate on the lecture, we propose the AVTA; localized sound of footsteps using a direction-controllable parametric speaker.
+Based on the hypothesis that the footsteps toward the audience indirectly notice her/his problematic attitude, we conduced two experiments for verification.
+
+As the results, the participants felt as though someone exists and walks around there 
+by perceiving the movement of sound localization of footsteps, and as though the subject of footsteps is lecturer or TA.
+
