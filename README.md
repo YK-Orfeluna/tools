@@ -38,3 +38,6 @@ ArudinoでLIS3DHを使うためには電圧の変換が必要なので，回路�
 回路図では，<font color="Red">**赤**が5V</font>，<font color="Orange">**オレンジ**が3.3V</font>，**黒**がGND，<font color="PeachPuff">**黄色**がSCL</font>，<font color="LimeGreen">**緑**がSDL</font>となっている．
 
 ## qrcode
+引数で入力したテキストをQRコード（.png）に変換する．
+
+実行するときは，`$make_qr.py text QR-image's name`とする．
