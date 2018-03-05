@@ -41,3 +41,14 @@ ArudinoでLIS3DHを使うためには電圧の変換が必要なので，回路�
 引数で入力したテキストをQRコード（.png）に変換する．
 
 実行するときは，`$make_qr.py text QR-image's name`とする．
+
+## md2pdf
+node.jsの[markdown-pdf](https://github.com/alanshaw/markdown-pdf)を使って，.mdファイルを.pdfに変換する．
+
+markdown-pdfの出力時の文字サイズは0.625emと小さいので，それを設定可能（初期値は1em）に変更
+
+実行時は，`python md2pdf markdown-name fontsize output-name`となる．
+
+- markdown-name: 変換したいmarkdownファイル
+- fontsize: 文字サイズ（デフォルトは1em）
+- output-name: 出力するPDFの名前（デフォルトはmarkdownのファイル名と一緒）
