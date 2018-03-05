@@ -30,6 +30,26 @@ else :
 	exit("[%s]: Missing args. This script needs 1 or 2 args.\npython %s [$1: filename(markdown)] [$2: fontsize(em)] [$3: output-name]\n$1 is necessary to need."\
 		%(ctime(), argv[0]))
 
+# check markdown
+while True :
+	name, ext = splitext(markdown)
+	if ext == ".md" :
+		try :
+			open(markdown, "r")
+			break
+		except FileNotFoundError :
+			markdown = input("Please input filename of markdown.\n>>>")
+	else :
+		markdown = input("Please input filename of markdown.\n>>>")
+
+# check fontsize
+while True :
+	try :
+		fontsize = float(fontsize)
+		break
+	except ValueError :
+		fontsize = input("Please input fontsize again.\n>>>")
+
 # making CSS to change fontsize of PDF
 css = "pdf.css"
 with open(css, "w") as fd :
@@ -42,7 +62,7 @@ if ext != ".pdf" :
 
 # run markdown-pdf
 call(["markdown-pdf", "-s", css, "-o", output , markdown], shell=True)
-print("[%s]: %s is wroten" %(ctime(), output))
+print("[%s]: %s is converted to %s" %(ctime(), markdown, output))
 
 # delete CSS
 if system() == "Windows" :
