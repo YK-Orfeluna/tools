@@ -2,7 +2,11 @@
 なんか便利なツールを作って溜め込んでるだけ
 
 ## aifc2wav
-未完
+AIFC, AIFFをwaveに変換する
+
+実行は，`aifc2wav.py sample.aifc`となるように（$1が変換対象のファイル名）．
+
+変換後のwaveファイルは，変換元ファイルと同じ名前，同じ場所に出力される．
 
 ## brew_update
 `brew_update.py`を実行したら，
