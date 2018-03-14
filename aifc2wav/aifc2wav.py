@@ -10,6 +10,7 @@ else :
 import wave, aifc
 from os.path import splitext, exists, basename
 from time import ctime
+from platform import system
 
 
 class App :
@@ -17,8 +18,7 @@ class App :
 		while True :
 			name, ext = splitext(aifcname)
 			if ext != ".aifc" and ext != ".aif" and ext != ".aiff" :
-				print(ext)
-				print("Your chosen data is not AiFF.\nPlease re-input your data-name.")
+				print("Your chosen data is not AiFF.\nPlease re-input your AIFF's name.")
 				aifcname = input(">>>")
 			else :
 				break
@@ -26,6 +26,12 @@ class App :
 		self.aifcname = aifcname
 		self.wavname = name +".wav"
 		self.info = dict()
+
+		self.data = 0
+		self.channel = 0
+		self.sample_size = 0
+		self.sample_rate = 0
+		self.num_frame = 0
 
 	def read_aifc(self) :
 		with aifc.open(self.aifcname, "rb") as fd :
@@ -38,6 +44,8 @@ class App :
 		return 0
 
 	def aifc2wav(self) :
+		self.read_aifc()
+
 		with wav.open(wavname, "rb") as fd :
 			fd.setnchannels(self.channel)
 			fd.setsampwidth(self.sample_size)
@@ -47,6 +55,8 @@ class App :
 		return 0
 
 	def convert(self) :
+		self.get_info()
+
 		cmd = ["afconvert", "-f", "WAVE", "-d", self.info["sourcebitdepth"], self.aifcname, self.wavname]
 		print(cmd)
 		call(cmd)
@@ -57,7 +67,6 @@ class App :
 		cmd = ["afinfo", self.aifcname]
 
 		info_b = check_output(cmd)
-		#print(info_b)
 		info_s = info_b.decode("utf-8")
 		info = info_s.replace(" ", "").strip().split("\n")
 
@@ -67,21 +76,22 @@ class App :
 				key = i[:j]
 				value = i[j+1:]
 				self.info.update({key: value})
-		#print(self.info)
+
 		return 0
 
 	def main(self) :
 		try :
-			self.read_aifc()
 			self.aifc2wav()
 		except aifc.Error :
-			self.get_info()
-			self.convert()
+			if system() == "darwin" :
+				self.convert()
+			else :
+				exit("Sorry, your chosen AIFF is able to convert on MacOS X only.\nYour using OS is not MacOS X.")
 
 		#エラーが出たら，afconvertで変換
 		#問題なかったら，aifc2wav()を実行する
 
-		print("[%s] %s was converted to %s" %(ctime(), self.aifcname, self.wavname))
+		print("Success!\n[%s] %s was converted to %s" %(ctime(), self.aifcname, self.wavname))
 
 if __name__ == "__main__" :
 	from sys import argv
