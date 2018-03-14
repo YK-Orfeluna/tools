@@ -3,7 +3,7 @@
 from sys import version_info
 version = version_info[0]
 if version == 3 :
-	from subprocess import call
+	from subprocess import call, check_output
 else :
 	exit("Sorry, this script is only supported by Python3.x.\nYour Python is not Python3.x.")
 
@@ -16,7 +16,8 @@ class App :
 	def __init__(self, aifcname) :
 		while True :
 			name, ext = splitext(aifcname)
-			if ext == ".aifc" or ext == ".aif" or ext == ".aiff" :
+			if ext != ".aifc" and ext != ".aif" and ext != ".aiff" :
+				print(ext)
 				print("Your chosen data is not AiFF.\nPlease re-input your data-name.")
 				aifcname = input(">>>")
 			else :
@@ -24,6 +25,7 @@ class App :
 
 		self.aifcname = aifcname
 		self.wavname = name +".wav"
+		self.info = dict()
 
 	def read_aifc(self) :
 		with aifc.open(self.aifcname, "rb") as fd :
@@ -45,15 +47,37 @@ class App :
 		return 0
 
 	def convert(self) :
-		command = ["afconvert", "-f", "WAVE", "-d", "LEI16", self.aifcname, self.wavname]
-		call(command, shell=True)
+		cmd = ["afconvert", "-f", "WAVE", "-d", self.info["sourcebitdepth"], self.aifcname, self.wavname]
+		print(cmd)
+		call(cmd)
 
+		return 0
+
+	def get_info(self) :
+		cmd = ["afinfo", self.aifcname]
+
+		info_b = check_output(cmd)
+		#print(info_b)
+		info_s = info_b.decode("utf-8")
+		info = info_s.replace(" ", "").strip().split("\n")
+
+		for i in info :
+			j = i.find(":")
+			if j >= 0 :
+				key = i[:j]
+				value = i[j+1:]
+				self.info.update({key: value})
+		#print(self.info)
 		return 0
 
 	def main(self) :
 		try :
 			self.read_aifc()
-		error 
+			self.aifc2wav()
+		except aifc.Error :
+			self.get_info()
+			self.convert()
+
 		#エラーが出たら，afconvertで変換
 		#問題なかったら，aifc2wav()を実行する
 
@@ -62,10 +86,10 @@ class App :
 if __name__ == "__main__" :
 	from sys import argv
 	
-	if len(argv) > 2 :
-		argv[1] = aifcname
+	if len(argv) >= 2 :
+		aifcname = argv[1]
 	else :
-		"dummy"
+		aifcname = "dummy"
 
 	app = App(aifcname)
 	app.main()
