@@ -83,7 +83,7 @@ class App :
 		try :
 			self.aifc2wav()
 		except aifc.Error :
-			if system() == "darwin" :
+			if system() == "Darwin" :
 				self.convert()
 			else :
 				exit("Sorry, your chosen AIFF is able to convert on MacOS X only.\nYour using OS is not MacOS X.")
