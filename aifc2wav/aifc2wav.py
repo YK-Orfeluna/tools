@@ -25,7 +25,6 @@ class App :
 
 		self.aifcname = aifcname
 		self.wavname = name +".wav"
-		self.info = dict()
 
 		self.data = 0
 		self.channel = 0
@@ -33,13 +32,16 @@ class App :
 		self.sample_rate = 0
 		self.num_frame = 0
 
+		self.bit = ""
+
 	def read_aifc(self) :
 		with aifc.open(self.aifcname, "rb") as fd :
-			self.data = fd.read()
 			self.channel = fd.getchannels()				# 1=monoral, 2=stereo
 			self.sample_size = fd.getsampwidth()		# sample size
 			self.sample_rate = fd.getframerate()		# sampling rate
 			self.num_frame = fd.getnframes()			# number of audio frame
+
+			self.data = fd.readframes(self.num_frame)
 
 		return 0
 
@@ -57,8 +59,7 @@ class App :
 	def convert(self) :
 		self.get_info()
 
-		cmd = ["afconvert", "-f", "WAVE", "-d", self.info["sourcebitdepth"], self.aifcname, self.wavname]
-		print(cmd)
+		cmd = ["afconvert", "-f", "WAVE", "-d", self.bit, self.aifcname, self.wavname]
 		call(cmd)
 
 		return 0
@@ -66,23 +67,24 @@ class App :
 	def get_info(self) :
 		cmd = ["afinfo", self.aifcname]
 
-		info_b = check_output(cmd)
-		info_s = info_b.decode("utf-8")
-		info = info_s.replace(" ", "").strip().split("\n")
+		info = check_output(cmd).decode("utf-8").replace(" ", "").strip().split("\n")
+		d = {}
 
 		for i in info :
 			j = i.find(":")
 			if j >= 0 :
 				key = i[:j]
 				value = i[j+1:]
-				self.info.update({key: value})
+				d.update({key: value})
+
+		self.bit = d["sourcebitdepth"]
 
 		return 0
 
 	def main(self) :
 		try :
 			self.aifc2wav()
-		except aifc.Error :
+		except :
 			if system() == "Darwin" :
 				self.convert()
 			else :
