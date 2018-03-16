@@ -9,6 +9,7 @@ else :
 from time import ctime
 from os.path import splitext
 from platform import system
+OS = system()
 
 class App :
 
@@ -17,7 +18,7 @@ class App :
 		self.fontsize = fontsize
 		self.pdf = pdf
 
-		if system() == "Windows" :
+		if OS == "Windows" :
 			self.flag = True
 		else :
 			self.flag = False
@@ -79,7 +80,7 @@ class App :
 			fd.write("body { font-size: %sem; }" %self.fontsize)
 
 	def rm_css(self) :
-		if system() == "Windows" :
+		if OS == "Windows" :
 			cmd = ["del", self.css]
 		else :
 			cmd = ["rm", self.css]
