@@ -6,75 +6,113 @@ if version_info[0] == 3 :
 else :
 	exit("Sorry, this script only supports Python3.x. Please try it again.")
 
-from sys import argv
 from time import ctime
 from os.path import splitext
 from platform import system
 
-# check args, and set variable
-l = len(argv)
-if l == 4 :
-	markdown = argv[1]
-	fontsize = argv[2]
-	output = argv[3]
-elif l == 3 :
-	markdown = argv[1]
-	fontsize = argv[2]
-	output = markdown
-elif l == 2 :
-	markdown = argv[1]
-	fontsize = 1.0
-	output = markdown
-else :
-	# missing args
-	exit("[%s]: Missing args. This script needs 1 or 2 args.\npython %s [$1: filename(markdown)] [$2: fontsize(em)] [$3: output-name]\n$1 is necessary to need."\
-		%(ctime(), argv[0]))
+class App :
 
-if system() == "Windows" :
-	shell = True
-else :
-	shell = False
+	def __init__(self, markdown, fontsize=1, pdf="") :
+		self.markdown = markdown
+		self.fontsize = fontsize
+		self.pdf = pdf
 
-# check markdown
-while True :
-	name, ext = splitext(markdown)
-	if ext == ".md" :
-		try :
-			open(markdown, "r")
-			break
-		except FileNotFoundError :
-			markdown = input("Please input filename of markdown.\n>>>")
+		if system() == "Windows" :
+			self.flag = True
+		else :
+			self.flag = False
+
+		self.css = "pdf.css"
+
+	def check_names(self) :
+		self.check_md()
+		self.check_fontsize()
+		self.check_pdf()
+
+	def check_md(self) :
+		# check markdown
+		while True :
+			name, ext = splitext(self.markdown)
+			if ext == ".md" :
+				try :
+					fd = open(self.markdown, "r")
+					fd.close()
+					break
+				except FileNotFoundError :
+					self.markdown = input("Please input filename of markdown.\n>>>")
+			else :
+				self.markdown = input("Please input filename of markdown.\n>>>")
+
+	def check_pdf(self) :
+		if self.pdf == "" :
+			self.pdf = splitext(self.markdown)[0] + ".pdf"
+		else :
+			while True :
+				name , ext = splitext(self.pdf)
+				if ext == ".pdf" :
+					break
+				elif ext == ".md" :
+					self.pdf = name + ".pdf"
+				else :
+					self.pdf = input("Please re-input output filename (PDF).\n>>>")
+
+	def check_fontsize(self) :
+		# check fontsize
+		while True :
+			try :
+				self.fontsize = float(self.fontsize)
+				break
+			except ValueError :
+				self.fontsize = input("Please input fontsize again.\n>>>")
+
+	def convert(self) :
+		# run markdown-pdf
+		self.make_css()
+		cmd = ["markdown-pdf", "-s", self.css, "-o", self.pdf , self.markdown]
+		call(cmd, shell=self.flag)
+		print("Success!\n[%s]: %s is converted to %s" %(ctime(), self.markdown, self.pdf))
+		self.rm_css()
+
+	def make_css(self) :
+		# making CSS to change fontsize of PDF
+		with open(self.css, "w") as fd :
+			fd.write("body { font-size: %sem; }" %self.fontsize)
+
+	def rm_css(self) :
+		if system() == "Windows" :
+			cmd = ["del", self.css]
+		else :
+			cmd = ["rm", self.css]
+
+		call(cmd, shell=self.flag)
+
+	def main(self) :
+		self.check_names()
+		self.convert()
+
+
+if __name__ == "__main__" :
+	from sys import argv
+	# check args, and set variable
+	l = len(argv)
+	if l == 4 :
+		markdown = argv[1]
+		fontsize = argv[2]
+		output = argv[3]
+	elif l == 3 :
+		markdown = argv[1]
+		fontsize = argv[2]
+		output = markdown
+	elif l == 2 :
+		markdown = argv[1]
+		fontsize = 1.0
+		output = markdown
 	else :
-		markdown = input("Please input filename of markdown.\n>>>")
+		# missing args
+		exit("[%s]: Missing args. This script needs 1 or 2 args.\npython %s [$1: filename(markdown)] [$2: fontsize(em)] [$3: output-name]\n$1 is necessary to need."\
+			%(ctime(), argv[0]))
 
-# check fontsize
-while True :
-	try :
-		fontsize = float(fontsize)
-		break
-	except ValueError :
-		fontsize = input("Please input fontsize again.\n>>>")
+	app = App(markdown, fontsize, output)
+	app.main()
 
-# making CSS to change fontsize of PDF
-css = "pdf.css"
-with open(css, "w") as fd :
-	fd.write("body { font-size: %sem; }" %fontsize)
-
-# checking extension of output
-name, ext = splitext(output)
-if ext != ".pdf" :
-	output = name + ".pdf"
-
-# run markdown-pdf
-cmd = ["markdown-pdf", "-s", css, "-o", output , markdown]
-call(cmd, shell=shell)
-print("Success!\n[%s]: %s is converted to %s" %(ctime(), markdown, output))
-
-# delete CSS
-if system() == "Windows" :
-	call(["del", css], shell=shell)
-else :
-	call(["rm", css], shell=shell)
-	
-
-exit("done")
+	exit("done")
