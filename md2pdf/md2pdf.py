@@ -30,6 +30,11 @@ else :
 	exit("[%s]: Missing args. This script needs 1 or 2 args.\npython %s [$1: filename(markdown)] [$2: fontsize(em)] [$3: output-name]\n$1 is necessary to need."\
 		%(ctime(), argv[0]))
 
+if system() == "Windows" :
+	shell = True
+else :
+	shell = False
+
 # check markdown
 while True :
 	name, ext = splitext(markdown)
@@ -61,14 +66,15 @@ if ext != ".pdf" :
 	output = name + ".pdf"
 
 # run markdown-pdf
-call(["markdown-pdf", "-s", css, "-o", output , markdown], shell=True)
-print("[%s]: %s is converted to %s" %(ctime(), markdown, output))
+cmd = ["markdown-pdf", "-s", css, "-o", output , markdown]
+call(cmd, shell=shell)
+print("Success!\n[%s]: %s is converted to %s" %(ctime(), markdown, output))
 
 # delete CSS
 if system() == "Windows" :
-	call(["del", css], shell=True)
+	call(["del", css], shell=shell)
 else :
-	call(["rm", css], shell=True)
+	call(["rm", css], shell=shell)
 	
 
 exit("done")
