@@ -2,14 +2,17 @@
 
 from sys import version_info
 if version_info[0] == 3 :
-	from subprocess import call
+	from subprocess import check_output, STDOUT
 else :
 	exit("Sorry, this script only supports Python3.x. Please try it again.")
 
 from time import ctime
 from os.path import splitext
 from platform import system
+
 OS = system()
+#DEBUG = True
+DEBUG = False
 
 class App :
 
@@ -38,6 +41,7 @@ class App :
 				try :
 					fd = open(self.markdown, "r")
 					fd.close()
+					print(self.markdown)
 					break
 				except FileNotFoundError :
 					self.markdown = input("Please input filename of markdown.\n>>>")
@@ -70,8 +74,11 @@ class App :
 		# run markdown-pdf
 		self.make_css()
 		cmd = ["markdown-pdf", "-s", self.css, "-o", self.pdf , self.markdown]
-		call(cmd, shell=self.flag)
-		print("Success!\n[%s]: %s is converted to %s" %(ctime(), self.markdown, self.pdf))
+		print("Now converting...")
+		rslt = check_output(cmd, shell=self.flag, stderr=STDOUT)
+		if DEBUG :
+			print(rslt.decode("utf-8"))
+		print("Success!\n[%s]: %s was converted to %s" %(ctime(), self.markdown, self.pdf))
 		self.rm_css()
 
 	def make_css(self) :
@@ -85,7 +92,9 @@ class App :
 		else :
 			cmd = ["rm", self.css]
 
-		call(cmd, shell=self.flag)
+		rslt = check_output(cmd, shell=self.flag)
+		if DEBUG :
+			print("Removed %s" %self.css)
 
 	def main(self) :
 		self.check_names()
