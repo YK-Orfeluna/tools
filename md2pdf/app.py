@@ -9,10 +9,20 @@ def __main() :
 
 	if markdown != "" :
 		
-		None
+		try :
+			fontsize = float(E1.get())
+			pdf = E2.get()
 
+			app = App(markdown, fontsize, pdf)
+			app.main()
 
+			messagebox.showinfo("INFORMATION", "%s is written." %app.pdf)
+		except ValueError :
+			messagebox.showwarning("WARNING", "Your Inputed Font-size is not 'int' or 'float'.")
 
+def __done() :
+	import sys
+	sys.exit()
 
 if __name__ == "__main__" :
 
@@ -28,16 +38,20 @@ if __name__ == "__main__" :
 	B1 = ttk.Button(root, text="To convert", command=__main, width=w)
 	B1.pack()
 
-	L1 = ttk.Label(root, text="Font-size (default=1.0)")
+	L1 = ttk.Label(root, text="Font-size")
 	L1.pack()
 
-	E1 = ttk.Entry(root, font=("1.0", 12), justify="center", width=w, exportselection="1")
+	E1 = ttk.Entry(root, font=("1.0", 12), justify="center", width=w)
+	E1.insert(0, "1.0")
 	E1.pack()
 
-	L2 = ttk.Label(root, text="PDF's name (default is same as maekdown's name")
+	L2 = ttk.Label(root, text="PDF's name (default is same as markdown's name")
 	L2.pack()
 
 	E2 = ttk.Entry(root, font=("1.0", 12), justify="center", width=w)
 	E2.pack()
+
+	B2 = ttk.Button(root, text="EXIT", command=__done, width=w)
+	B2.pack()
 
 	root.mainloop()
