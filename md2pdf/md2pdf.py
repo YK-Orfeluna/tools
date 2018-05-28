@@ -91,33 +91,8 @@ class App :
 		self.check_names()
 		self.convert()
 
-def __button1() :
-	global markdown
-
-
-
 if __name__ == "__main__" :
-	from tkinter import Tk, ttk, messagebox, filedialog
 
-	fType = [("markdown", "*.md")]
-	markdown = filedialog.askopenfilename(title="Choose your Markdown-file", filetypes=fType)
-
-	if markdown == "" :
-		exit("done")
-
-	# フォントサイズを選ぶ
-
-	# 出力先とファイル名を選ぶ
-
-	# 実行
-
-
-
-
-
-
-
-	"""
 	from sys import argv
 	# check args, and set variable
 	l = len(argv)
@@ -140,6 +115,5 @@ if __name__ == "__main__" :
 
 	app = App(markdown, fontsize, output)
 	app.main()
-	"""
 
 	exit("done")
