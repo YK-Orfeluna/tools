@@ -100,8 +100,8 @@ class App :
 		self.check_names()
 		self.convert()
 
-
 if __name__ == "__main__" :
+
 	from sys import argv
 	# check args, and set variable
 	l = len(argv)
